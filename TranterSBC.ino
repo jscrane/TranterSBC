@@ -89,8 +89,8 @@ void setup() {
 
 	machine.init();
 
-        for (unsigned i = 0; i < 32; i++)
-                memory.put(pages[i], i * ram<>::page_size);
+	for (unsigned i = 0; i < 32; i++)
+		memory.put(pages[i], i * ram<>::page_size);
 
 	memory.put(via, 0x8000);
 	memory.put(acia, 0xa000);
