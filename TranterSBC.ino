@@ -20,11 +20,10 @@ public:
 
 	void init() {
 		_acia.register_framing_handler([](uint32_t cfg) {
-#if DEBUGGING != DEBUG_NONE
-			DBG_EMU(printf("framing: %x\r\n", cfg));
-#else
+#if DEBUGGING == DEBUG_NONE
 			Serial.begin(TERMINAL_SPEED, cfg);
 #endif
+			DBG_EMU(printf("framing: %x\r\n", cfg));
 		});
 		_acia.register_read_data_handler([]() {
 			uint8_t b = Serial.read();
@@ -65,12 +64,22 @@ private:
 
 } acia;
 
+// Lilygo TTGO
+#define BUTTON_PIN	36
+#define LED_PIN		14
+
 class ViaDevice: public Memory::Device {
 public:
 	ViaDevice(): Memory::Device(8192) {}
 
 	void init() {
 		_via.register_irq_handler(irq_handler);
+		_via.register_porta_input_handler([]() {
+			return (uint8_t)!digitalRead(BUTTON_PIN);
+		});
+		_via.register_porta_output_handler([](uint8_t b) {
+			digitalWrite(LED_PIN, (b & 0x80)? LOW: HIGH);
+		});
 	}
 
 	void poll() { _via.tick(); }
@@ -86,6 +95,11 @@ prom basic(osi_bas, 16384);
 ram<> pages[32];
 
 void setup() {
+
+	pinMode(LED_PIN, OUTPUT);
+	pinMode(BUTTON_PIN, INPUT);
+
+	digitalWrite(LED_PIN, LOW);
 
 	machine.init();
 
