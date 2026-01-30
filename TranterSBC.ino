@@ -82,8 +82,6 @@ public:
 		});
 	}
 
-	void poll() { _via.tick(); }
-
 	virtual void operator=(uint8_t b) { _via.write(_acc, b); }
 	virtual operator uint8_t() { return _via.read(_acc); }
 
@@ -119,6 +117,5 @@ void setup() {
 void loop() {
 
 	acia.poll();
-	via.poll();
 	machine.run();
 }
