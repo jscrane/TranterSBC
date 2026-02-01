@@ -4,3 +4,6 @@
 .build
 serialout.txt
 *.swp
+*.bin
+*.map
+*.srec

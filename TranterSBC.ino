@@ -26,7 +26,7 @@ public:
 		});
 		_acia.register_read_data_handler([]() {
 			uint8_t b = Serial.read();
-			DBG_EMU("read: %x\r\n", b);
+			DBG_EMU("read: %02x", b);
 			if (b == 0x0e)		// ^N
 				machine.reset();
 			else if (b == 0x08)	// BS
@@ -34,7 +34,7 @@ public:
 			return b;
 		});
 		_acia.register_write_data_handler([](uint8_t b) {
-			DBG_EMU("write: %x", b);
+			DBG_EMU("write: %02x", b);
 			if (b == '_') {
 				Serial.write(0x08);
 				Serial.write(' ');
