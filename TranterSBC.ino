@@ -7,7 +7,7 @@
 
 Memory memory;
 r6502 cpu(memory);
-Machine machine(cpu);
+Arduino machine(cpu);
 
 static void irq_handler(bool irq) {
 	if (irq)
@@ -21,7 +21,7 @@ public:
 	void init() {
 		_acia.register_framing_handler([](uint8_t) {
 #if DEBUGGING == DEBUG_NONE
-			Serial.begin(TERMINAL_SPEED);
+			Serial.begin(TERMINAL_SPEED, SERIAL_8N1);
 #endif
 		});
 		_acia.register_read_data_handler([]() {
@@ -98,7 +98,7 @@ void setup() {
 
 	digitalWrite(LED_PIN, LOW);
 
-	machine.init();
+	machine.begin();
 
 	for (unsigned i = 0; i < 32; i++)
 		memory.put(pages[i], i * ram<>::page_size);
