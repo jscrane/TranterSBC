@@ -51,9 +51,8 @@ public:
 			return s;
 		});
 		_acia.register_irq_handler(irq_handler);
+		machine.register_pollable(_acia);
 	}
-
-	void poll() { _acia.poll_for_interrupt(); }
 
 	virtual void operator=(uint8_t b) { _acia.write(_acc, b); }
 	virtual operator uint8_t() { return _acia.read(_acc); }
@@ -115,6 +114,5 @@ void setup() {
 
 void loop() {
 
-	acia.poll();
 	machine.run();
 }
